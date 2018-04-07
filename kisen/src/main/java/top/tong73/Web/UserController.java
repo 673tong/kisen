@@ -22,6 +22,11 @@ public class UserController {
         return "user/index";
     }
 
+    @RequestMapping(value = "/layui")
+    public String layui(){
+        return "page/index";
+    }
+
     @RequestMapping(value = "/show")
     @ResponseBody
     public String show(@RequestParam(value = "name")String name){

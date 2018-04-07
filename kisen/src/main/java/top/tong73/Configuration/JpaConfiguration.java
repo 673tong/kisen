@@ -16,7 +16,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @Configuration
 @EnableTransactionManagement(proxyTargetClass = true)
 @EnableJpaRepositories(basePackages = "top.tong73.Repository")
-@EntityScan(basePackages = "top.tong73.entity")
+@EntityScan(basePackages = "top.tong73.Entity")
 public class JpaConfiguration {
     @Bean
     PersistenceExceptionTranslationPostProcessor persistenceExceptionTranslationPostProcessor(){
