@@ -12,19 +12,19 @@ import top.tong73.Service.UserService;
  * 提供两个接口，/user/index 返回页面，/user/show返回数据
  */
 @Controller
-@RequestMapping(value = "/user")
+@RequestMapping(value = "/kisen")
 public class UserController {
     @Autowired
     private UserService userService;
 
     @RequestMapping(value = "/index")
     public String index(){
-        return "user/index";
+        return "layuicms2.0/page/index";
     }
 
-    @RequestMapping(value = "/layui")
+    @RequestMapping(value = "/user/index")
     public String layui(){
-        return "page/index";
+        return "user/index";
     }
 
     @RequestMapping(value = "/show")
