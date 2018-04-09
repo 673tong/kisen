@@ -19,7 +19,17 @@ public class UserController {
 
     @RequestMapping(value = "/index")
     public String index(){
-        return "layuicms2.0/page/index";
+        return "page/index";
+    }
+
+    @RequestMapping(value = "/index2")
+    public String index2(){
+        return "views/index";
+    }
+
+    @RequestMapping(value = "/main")
+    public String main(){
+        return "views/main";
     }
 
     @RequestMapping(value = "/user/index")
