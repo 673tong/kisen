@@ -19,21 +19,6 @@ public class UserController {
 
     @RequestMapping(value = "/index")
     public String index(){
-        return "page/index";
-    }
-
-    @RequestMapping(value = "/index2")
-    public String index2(){
-        return "views/index";
-    }
-
-    @RequestMapping(value = "/main")
-    public String main(){
-        return "views/main";
-    }
-
-    @RequestMapping(value = "/user/index")
-    public String layui(){
         return "user/index";
     }
 

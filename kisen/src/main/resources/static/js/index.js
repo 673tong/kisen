@@ -10,6 +10,15 @@
 * | Author: qinshouwei <313492783@qq.com>
 * +----------------------------------------------------------------------
 */
+//获取当前的url路径
+function getProjectUrl() {
+    var protocol = window.location.protocol;
+    var host = window.location.host;
+    var pathname = window.location.pathname;
+    var project = pathname.split("\/")[1];
+    var url = protocol+"//"+host+"/"+project;
+    return url;
+}
 'use strict';
 layui.use(['jquery','layer','element'],function(){
 	window.jQuery = window.$ = layui.jquery;
