@@ -52,7 +52,7 @@
     });
 
     //http://192.168.1.128:6080/arcgis/rest/services/2013_hbhndvi/MapServer?f=jsapi
-    var wms2013 = new ol.layer.Tile({
+    /*var wms2013 = new ol.layer.Tile({
         source: new ol.source.TileArcGISRest({
             url: 'http://192.168.1.122:6080/arcgis/rest/services/2013_hbhndvi/MapServer'
         })
@@ -76,10 +76,52 @@
         source: new ol.source.TileArcGISRest({
             url: 'http://192.168.1.122:6080/arcgis/rest/services/2017_hbhndvi/MapServer'
         })
+    });*/
+
+    //谷歌交通地图
+    var googleMapLayer = new ol.layer.Tile({
+        source: new ol.source.XYZ({
+            params:{
+                'FORMAT': 'image/png',
+                'VERSION': '1.1.1',
+                tiled: true,
+                STYLES: '',
+                LAYERS: 'manager'
+            },
+            url:'http://www.google.cn/maps/vt/pb=!1m4!1m3!1i{z}!2i{x}!3i{y}!2m3!1e0!2sm!3i345013117!3m8!2szh-CN!3scn!5e1105!12m4!1e68!2m2!1sset!2sRoadmap!4e0'
+        }),
+        zIndex:getZindex(),
+        visible:false
     });
 
+    //谷歌地形地图
+    var googleTerrainLayer = new ol.layer.Tile({
+        source: new ol.source.XYZ({
+            url:'http://mt3.google.cn/vt/lyrs=t@131,r@216000000&hl=zh-CN&gl=CN&src=app&x={x}&y={y}&z={z}&s=Gal'
+        }),
+        zIndex:getZindex(),
+        visible:false
+    })
 
-    //天地图路网
+    //谷歌卫星地图 混合
+    var googleSatelliteLayer = new ol.layer.Tile({
+        source: new ol.source.XYZ({
+            url:'http://mt2.google.cn/vt/lyrs=y&hl=zh-CN&gl=CN&src=app&x={x}&y={y}&z={z}&s=G'
+        }),
+        zIndex:getZindex(),
+        visible:false
+    });
+
+    //高德地图在线
+    var gaodeMapLayer = new ol.layer.Tile({
+        source: new ol.source.XYZ({
+            url:'http://webrd03.is.autonavi.com/appmaptile?x={x}&y={y}&z={z}&lang=zh_cn&size=1&scale=1&style=8'
+        }),
+        zIndex:getZindex(),
+        visible:false
+    })
+
+    //在线天地图
     var tian_di_tu_road_layer = new ol.layer.Tile({
         title: "天地图路网",
         source: new ol.source.XYZ({
@@ -94,7 +136,28 @@
         title: "天地图文字标注",
         source: new ol.source.XYZ({
             url: 'http://t3.tianditu.com/DataServer?T=cva_w&x={x}&y={y}&l={z}'
-        })
+        }),
+        visible:false
+    });
+
+
+    //天地图路网
+    var tian_di_tu_road_layer = new ol.layer.Tile({
+        title: "天地图路网",
+        source: new ol.source.XYZ({
+            url: "http://t4.tianditu.com/DataServer?T=vec_w&x={x}&y={y}&l={z}"
+        }),
+        zIndex:getZindex(),
+        visible:true
+    });
+
+    //天地图文字标注
+    var tian_di_tu_annotation = new ol.layer.Tile({
+        title: "天地图文字标注",
+        source: new ol.source.XYZ({
+            url: 'http://t3.tianditu.com/DataServer?T=cva_w&x={x}&y={y}&l={z}'
+        }),
+        visible:false
     });
 
     //天地图影像
@@ -116,10 +179,10 @@
     })
 
     //var wmsLayers = [wmsLayer2013,wmsLayer2014,wmsLayer2015,wmsLayer2016,wmsLayer2017,tian_di_tu_road_layer];
-    var wmsLayers = [wms2013,wms2014,wms2015,wms2016,wms2017];
+    var wmsLayers = [googleMapLayer,tiandituSatelliteLayer,gaodeMapLayer,googleSatelliteLayer,googleTerrainLayer];
 
     var map = new ol.Map({
-        layers: [tian_di_tu_road_layer,wms2013,wms2014,wms2015,wms2016,wms2017],
+        layers: [tian_di_tu_road_layer,googleMapLayer,tiandituSatelliteLayer,gaodeMapLayer,googleSatelliteLayer,googleTerrainLayer],
         target: 'map',
         view: new ol.View({
             center: [11955935.997739986,4549149.738392264],//107.312649,37.826151//710592.4416966487, 4185458.198235354//12126505.226358354, 4064768.290149103西安
@@ -128,9 +191,9 @@
         projection: 'EPSG:2343'
     });
     var allLayers = map.getLayers().getArray();
-    for(var j in allLayers){
+    /*for(var j in allLayers){
         allLayers[j].setVisible(true);
-    }
+    }*/
 
     /**
      * 定位
