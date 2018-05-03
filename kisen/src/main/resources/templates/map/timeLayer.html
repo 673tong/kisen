@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>定时切换地图</title>
+    <title>Single Image WMS</title>
     <script  src="http://libs.baidu.com/jquery/1.7.2/jquery.min.js"></script>
     <link rel="stylesheet" href="https://openlayers.org/en/v4.6.4/css/ol.css" type="text/css">
     <link rel="stylesheet" href="css/map.css" type="text/css">
@@ -10,13 +10,10 @@
 
 </head>
 <body>
-
-
-    <button onclick="dingwei()">定位</button>
+    <!--<button onclick="dingwei()">定位</button>-->
     <button onclick="getLonLatClick()">拾取坐标</button>
-
-    <button onclick="changMap()">定时切换图层</button>
-
+    <button onclick="timeChangeLayer()">播放图层</button>
+    <button onclick="clearTimer()">暂停图层</button>
 </div>
 <div id="map" class="map" ></div>
 <script>
@@ -55,92 +52,34 @@
     });
 
     //http://192.168.1.128:6080/arcgis/rest/services/2013_hbhndvi/MapServer?f=jsapi
-    var wmsLayer2013 = new ol.layer.Tile({
-        title:"自定义2013wms",
-        source:new ol.source.TileWMS({
-            params:{
-                'FORMAT': 'image/png',
-                'VERSION': '1.1.1',
-                tiled: true,
-                STYLES: '',
-                LAYERS: '',
-                f:'jsapi'
-            },
+    var wms2013 = new ol.layer.Tile({
+        source: new ol.source.TileArcGISRest({
             url: 'http://192.168.1.122:6080/arcgis/rest/services/2013_hbhndvi/MapServer'
-        }),
-        zIndex:getZindex(),
-        visible:false
+        })
     });
-    var wmsLayer2014 = new ol.layer.Tile({
-        title:"自定义2014wms",
-        source:new ol.source.TileWMS({
-            params:{
-                'FORMAT': 'image/png',
-                'VERSION': '1.1.1',
-                tiled: true,
-                STYLES: '',
-                LAYERS: '',
-                f:'jsapi'
-            },
-            url: 'http://192.168.1.122:6080/arcgis/services/2014_hbhndvi/MapServer/WMSServer'
-        }),
-        zIndex:getZindex(),
-        visible:false
+    var wms2014 = new ol.layer.Tile({
+        source: new ol.source.TileArcGISRest({
+            url: 'http://192.168.1.122:6080/arcgis/rest/services/2014_hbhndvi/MapServer'
+        })
     });
-    var wmsLayer2015 = new ol.layer.Tile({
-        title:"自定义2015wms",
-        source:new ol.source.TileWMS({
-            params:{
-                'FORMAT': 'image/png',
-                'VERSION': '1.1.1',
-                tiled: true,
-                STYLES: '',
-                LAYERS: '',
-                f:'jsapi'
-            },
-            url: 'http://192.168.1.122:6080/arcgis/services/2015_hbhndvi/MapServer/WMSServer'
-        }),
-        zIndex:getZindex(),
-        visible:false
+    var wms2015 = new ol.layer.Tile({
+        source: new ol.source.TileArcGISRest({
+            url: 'http://192.168.1.122:6080/arcgis/rest/services/2015_hbhndvi/MapServer'
+        })
     });
-    var wmsLayer2016 = new ol.layer.Tile({
-        title:"自定义2016wms",
-        source:new ol.source.TileWMS({
-            params:{
-                'FORMAT': 'image/png',
-                'VERSION': '1.1.1',
-                tiled: true,
-                STYLES: '',
-                LAYERS: '',
-                f:'jsapi'
-            },
-            url: 'http://192.168.1.122:6080/arcgis/services/2016_hbhndvi/MapServer/WMSServer'
-        }),
-        zIndex:getZindex(),
-        visible:false
+    var wms2016 = new ol.layer.Tile({
+        source: new ol.source.TileArcGISRest({
+            url: 'http://192.168.1.122:6080/arcgis/rest/services/2016_hbhndvi/MapServer'
+        })
     });
-    var wmsLayer2017 = new ol.layer.Tile({
-        title:"自定义2017wms",
-        source:new ol.source.TileWMS({
-            params:{
-                'FORMAT': 'image/png',
-                'VERSION': '1.1.1',
-                tiled: true,
-                STYLES: '',
-                LAYERS: '',
-                f:'jsapi'
-            },
-            url: 'http://192.168.1.122:6080/arcgis/services/2017_hbhndvi/MapServer/WMSServer'
-
-        }),
-        zIndex:getZindex(),
-        visible:false
+    var wms2017 = new ol.layer.Tile({
+        source: new ol.source.TileArcGISRest({
+            url: 'http://192.168.1.122:6080/arcgis/rest/services/2017_hbhndvi/MapServer'
+        })
     });
 
-    var wmsLayers = [wmsLayer2013,wmsLayer2014,wmsLayer2015,wmsLayer2016,wmsLayer2017];
 
-
-    //在线天地图
+    //天地图路网
     var tian_di_tu_road_layer = new ol.layer.Tile({
         title: "天地图路网",
         source: new ol.source.XYZ({
@@ -150,6 +89,7 @@
         visible:false
     });
 
+    //天地图文字标注
     var tian_di_tu_annotation = new ol.layer.Tile({
         title: "天地图文字标注",
         source: new ol.source.XYZ({
@@ -175,14 +115,15 @@
         visible:false
     })
 
-
+    //var wmsLayers = [wmsLayer2013,wmsLayer2014,wmsLayer2015,wmsLayer2016,wmsLayer2017,tian_di_tu_road_layer];
+    var wmsLayers = [wms2013,wms2014,wms2015,wms2016,wms2017];
 
     var map = new ol.Map({
-        layers: [wmsLayer2013],
+        layers: [tian_di_tu_road_layer,wms2013,wms2014,wms2015,wms2016,wms2017],
         target: 'map',
         view: new ol.View({
             center: [11955935.997739986,4549149.738392264],//107.312649,37.826151//710592.4416966487, 4185458.198235354//12126505.226358354, 4064768.290149103西安
-            zoom: 12
+            zoom: 11
         }),
         projection: 'EPSG:2343'
     });
@@ -211,22 +152,27 @@
      * 点击切换地图
      * @param layer
      */
+    var changMapTimer;
     function changMap() {
-        map.getLayers().remove();
-        map.getLayers().clear();
-        map.addLayer(tiandituSatelliteLayer);
-        map.addLayer(tian_di_tu_annotation);
-        wmsIndex++;
-        alert(wmsIndex);
+        //map.getLayers().remove();
+        //map.getLayers().clear();
+        //map.addLayer(tiandituSatelliteLayer);
+        //map.addLayer(tian_di_tu_annotation);
         if(wmsIndex >= wmsLayers.length){
             wmsIndex = 0;
         }
-        wmsLayers[wmsIndex].setVisible(true);
-        wmsLayers[wmsIndex].setZIndex(getZindex());
-        map.addLayer(wmsLayers[wmsIndex]);
-
-        window.setTimeout(changMap,2000);
-
+        for(var i=0;i<wmsLayers.length;i++){
+            if(i==wmsIndex){
+                wmsLayers[i].setVisible(true);
+                //wmsLayers[i].setZIndex(getZindex());
+                //map.addLayer(wmsLayers[i]);
+            }else{
+                wmsLayers[i].setVisible(false);
+            }
+        }
+        wmsIndex++;
+        //map.addLayer(wmsLayers[wmsIndex]);
+        changMapTimer = window.setTimeout(changMap,2000);
     }
 
     /**
@@ -234,7 +180,15 @@
      */
     var wmsIndex=0;
     function timeChangeLayer() {
+        if(changMapTimer)window.clearTimeout(changMapTimer);
+        changMap();
+    }
 
+    /**
+     * 暂停图层
+     */
+    function clearTimer() {
+        if(changMapTimer)window.clearTimeout(changMapTimer);
     }
 
     //拾取坐标
@@ -335,7 +289,7 @@
 
     //实时获取层级变化，到达指定层级后显示或隐藏图层
     //map.getView().on('change:resolution',checkZoom);
-    function checkZoom() {
+    /*function checkZoom() {
         if(map.getView().getZoom() > 8 && map.getView().getZoom() < 18){
             map.addLayer(wmsLayer);
             wmsLayer.setZIndex(getZindex());
@@ -347,7 +301,7 @@
             googleSatelliteLayer.setZIndex(getZindex());
             googleSatelliteLayer.setVisible(true);
         }
-    }
+    }*/
 
 </script>
 </body>
