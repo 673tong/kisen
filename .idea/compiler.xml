@@ -9,5 +9,8 @@
         <module name="kisen" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="kisen" target="1.8" />
+    </bytecodeTargetLevel>
   </component>
 </project>
